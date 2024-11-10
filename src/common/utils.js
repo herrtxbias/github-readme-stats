@@ -6,6 +6,8 @@ import { themes } from "../../themes/index.js";
 
 const TRY_AGAIN_LATER = "Please try again later";
 
+const OWNER_AFFILIATIONS = ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"];
+
 const SECONDARY_ERROR_MESSAGES = {
   MAX_RETRY:
     "You can deploy own instance or wait until public will be no longer limited",
@@ -387,13 +389,11 @@ const renderError = (message, secondaryMessage = "", options = {}) => {
     .small { font: 600 12px 'Segoe UI', Ubuntu, Sans-Serif; fill: ${textColor} }
     .gray { fill: #858585 }
     </style>
-    <rect x="0.5" y="0.5" width="${
-      ERROR_CARD_LENGTH - 1
+    <rect x="0.5" y="0.5" width="${ERROR_CARD_LENGTH - 1
     }" height="99%" rx="4.5" fill="${bgColor}" stroke="${borderColor}"/>
-    <text x="25" y="45" class="text">Something went wrong!${
-      UPSTREAM_API_ERRORS.includes(secondaryMessage)
-        ? ""
-        : " file an issue at https://tiny.one/readme-stats"
+    <text x="25" y="45" class="text">Something went wrong!${UPSTREAM_API_ERRORS.includes(secondaryMessage)
+      ? ""
+      : " file an issue at https://tiny.one/readme-stats"
     }</text>
     <text data-testid="message" x="25" y="55" class="text small">
       <tspan x="25" dy="18">${encodeHTML(message)}</tspan>
@@ -438,7 +438,7 @@ const wrapTextMultiline = (text, width = 59, maxLines = 3) => {
   return multiLineText;
 };
 
-const noop = () => {};
+const noop = () => { };
 // return console instance based on the environment
 const logger =
   process.env.NODE_ENV === "test" ? { log: noop, error: noop } : console;
@@ -478,8 +478,6 @@ const CONSTANTS = {
   PIN_CARD_CACHE_SECONDS: TEN_DAY,
   ERROR_CACHE_SECONDS: TEN_MINUTES,
 };
-
-const OWNER_AFFILIATIONS = ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"];
 
 /**
  * Missing query parameter class.
