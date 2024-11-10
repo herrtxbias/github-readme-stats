@@ -15,6 +15,9 @@ const SECONDARY_ERROR_MESSAGES = {
   GRAPHQL_ERROR: TRY_AGAIN_LATER,
   GITHUB_REST_API_ERROR: TRY_AGAIN_LATER,
   WAKATIME_USER_NOT_FOUND: "Make sure you have a public WakaTime profile",
+  INVALID_AFFILIATION: `Invalid owner affiliations. Valid values are: ${OWNER_AFFILIATIONS.join(
+    ", ",
+  )}`,
 };
 
 /**
@@ -476,6 +479,8 @@ const CONSTANTS = {
   ERROR_CACHE_SECONDS: TEN_MINUTES,
 };
 
+const OWNER_AFFILIATIONS = ["OWNER", "COLLABORATOR", "ORGANIZATION_MEMBER"];
+
 /**
  * Missing query parameter class.
  */
@@ -584,6 +589,36 @@ const parseEmojis = (str) => {
     return toEmoji.get(emoji) || "";
   });
 };
+/**
+ * Parse owner affiliations.
+ *
+ * @param {string[]} affiliations
+ * @returns {string[]} Parsed affiliations.
+ *
+ * @throws {CustomError} If affiliations contains invalid values.
+ */
+const parseOwnerAffiliations = (affiliations) => {
+  // Set default value for ownerAffiliations.
+  // NOTE: Done here since parseArray() will always return an empty array even nothing
+  //was specified.
+  affiliations =
+    affiliations && affiliations.length > 0
+      ? affiliations.map((affiliation) => affiliation.toUpperCase())
+      : ["OWNER"];
+
+  // Check if ownerAffiliations contains valid values.
+  if (
+    affiliations.some(
+      (affiliation) => !OWNER_AFFILIATIONS.includes(affiliation),
+    )
+  ) {
+    throw new CustomError(
+      "Invalid query parameter",
+      CustomError.INVALID_AFFILIATION,
+    );
+  }
+  return affiliations;
+};
 
 /**
  * Get diff in minutes between two dates.
@@ -618,11 +653,13 @@ export {
   wrapTextMultiline,
   logger,
   CONSTANTS,
+  OWNER_AFFILIATIONS,
   CustomError,
   MissingParamError,
   measureText,
   lowercaseTrim,
   chunkArray,
   parseEmojis,
+  parseOwnerAffiliations,
   dateDiff,
 };
